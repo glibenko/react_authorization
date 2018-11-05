@@ -1,6 +1,6 @@
 {
   "name": "react_template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React template",
   "main": "./server/server.js",
   "scripts": {
