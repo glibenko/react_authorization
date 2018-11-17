@@ -1,6 +1,6 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const plugins = [];
@@ -21,7 +21,7 @@ if (NODE_ENV === 'production') {
 
 module.exports = {
   entry: [
-    'babel-polyfill', 
+    '@babel/polyfill',
     path.resolve(__dirname, 'client', 'app.jsx'),
   ],
   output: {
@@ -31,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
@@ -41,8 +41,8 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: 'css/style.css'
-            }
+              publicPath: 'css/style.css',
+            },
           },
           'css-loader',
           'postcss-loader',
@@ -55,7 +55,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[path][name]-[hash].[ext]',
-              outputPath: 'img/'
+              outputPath: 'img/',
             },
           },
         ],
@@ -67,7 +67,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[path][name]-[hash].[ext]',
-              outputPath: 'fonts/'
+              outputPath: 'fonts/',
             },
           },
         ],
@@ -76,10 +76,14 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
-      chunkFilename: "[id].[hash].css"
-    })
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css',
+    }),
   ],
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+    modules: [path.resolve(__dirname, 'client'), 'node_modules'],
+  },
   mode: NODE_ENV,
   watch: NODE_ENV === 'development',
 };

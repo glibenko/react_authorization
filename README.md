@@ -15,14 +15,12 @@ $ git clone https://github.com/njiyto/react_template
 # Install dependencies
 $ npm install
 
-# Build dev front
-$ npm run build:dev
-
-# Start dev server
-$ npm run start:dev
+# Build app for dev
+$ npm start
 ```
 
 ### Description
+* [npm start] - concurrently run two commands below
 * [npm run build:dev] - webpack --progress
 * [npm run start:dev] -  nodemon --watch ./server/server.js on 3000 port
 

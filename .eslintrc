@@ -1,7 +1,7 @@
 {
     "extends": "airbnb",
     "rules": {
-        "indent": [2, 4, { "SwitchCase": 1 }],
+        "indent": [2, 2, { "SwitchCase": 1 }],
         "max-len": [2, 120],
         "arrow-parens": ["warn", "as-needed"],
         "consistent-return": "off",
@@ -24,8 +24,8 @@
         }],
         "import/prefer-default-export": "warn",
         "import/first": "warn",
-        "react/jsx-indent": [2, 4],
-        "react/jsx-indent-props": [2, 4],
+        "react/jsx-indent": [2, 2],
+        "react/jsx-indent-props": [2, 2],
         "react/forbid-prop-types": [2, { "forbid": ["any"] }],
         "react/no-unused-prop-types": "off",
         "react/sort-comp": "off",
