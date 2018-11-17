@@ -29,3 +29,11 @@ $ npm start
 * [public] - there is a ready app
 * [server] - there are all files which relate to server
 * [root files] - there are all settings files
+
+### Contribution
+everytime check email:
+```
+$ git config user.email
+$ git config user.email 'example@mail'
+$ git remote -v
+```
