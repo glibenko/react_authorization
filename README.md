@@ -1,16 +1,9 @@
-### React template
-
-This is a template to build a scalable react web application using:
-* React
-* Express
-* Webpack
-* ESlint
-* Babel
+### React authorization
 
 ### Fast start
 ```sh
 # Clone the repository
-$ git clone https://github.com/njiyto/react_template
+$ git clone https://github.com/njiyto/react_
 
 # Install dependencies
 $ npm install
@@ -31,9 +24,10 @@ $ npm start
 * [root files] - there are all settings files
 
 ### Contribution
-everytime check email:
+everytime check:
 ```
 $ git config user.email
 $ git config user.email 'example@mail'
 $ git remote -v
+$ git remote set-url origin
 ```
