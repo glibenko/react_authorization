@@ -8,13 +8,24 @@ export default class index extends Component {
           this.props.history.push('/login');
         }
       });
-    console.log('this.props', this.props);
+  }
+
+  logout = () => {
+    fetch('/api/auth/logout')
+      .then(res => {
+        if (res && res.status === 401) {
+          this.props.history.push('/login');
+        }
+        return res.json();
+      })
+      .then(() => this.props.history.push('/login'));
   }
 
   render() {
     return (
       <div>
-        hi
+        <div> hi</div>
+        <div onClick={this.logout}> logout</div>
       </div>
     )
   }

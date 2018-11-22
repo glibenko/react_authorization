@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Field from '../../ui/Field';
+
 
 export default class Login extends Component {
   state = {
@@ -26,7 +28,7 @@ export default class Login extends Component {
       body: JSON.stringify(this.state),
     })
       .then(res => res.json())
-      .then(data => console.log('data', data));
+      .then(data => data.error === 0 && this.props.history.push('/main'));
   }
 
   login = () => {
@@ -34,37 +36,50 @@ export default class Login extends Component {
     fetch('/api/auth/login', {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
+        'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify(this.state),
     })
       .then(res => res.json())
-      .then(data => console.log('datalogin', data));
+      .then(data => data.error === 0 && this.props.history.push('/main'));
+  }
+
+  updateFields = (text, name) => {
+    const updateData = {};
+
+    updateData[name] = text;
+
+    this.setState(updateData);
   }
 
   render() {
     const { name, password, passwordConf, showReg } = this.state;
     return (
-      <div>
+      <div className="form">
         <div>
-          {showReg ? 'login' : 'registration'}
+          {showReg ? 'registration' : 'login'}
         </div>
-        <input
+        <Field
           type="text"
+          name="name"
           value={name}
-          onChange={e => this.setState({ name: e.target.value })}
+          updateFields={this.updateFields}
         />
-        <input
+        <Field
           type="password"
+          name="password"
           value={password}
-          onChange={e => this.setState({ password: e.target.value })}
+          updateFields={this.updateFields}
         />
-        {showReg &&
-          <input
-            type="passwordConf"
-            value={passwordConf}
-            onChange={e => this.setState({ passwordConf: e.target.value })}
-          />
+        {showReg
+          && <>
+            <Field
+              type="passwordConf"
+              name="password"
+              value={passwordConf}
+              updateFields={this.updateFields}
+            />
+          </>
         }
 
         <div onClick={() => {this.setState({showReg: !showReg})}}>
