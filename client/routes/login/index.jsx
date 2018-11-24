@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Field from '../../ui/Field';
-
+import styles from './styles.css';
 
 export default class Login extends Component {
   state = {
@@ -8,14 +8,17 @@ export default class Login extends Component {
     password: '',
     passwordConf: '',
     showReg: false,
+    answear: '',
   }
 
   componentDidMount() {
     fetch('/api/auth/check')
-      .then(res => {
-        console.log('res', res);
+      .then(res => res.json())
+      .then(data => {
+        if (data.error === 0) {
+          this.props.history.push('/main') 
+        }
       });
-    console.log('this.props', this.props);
   }
 
   reg = () => {
@@ -28,7 +31,14 @@ export default class Login extends Component {
       body: JSON.stringify(this.state),
     })
       .then(res => res.json())
-      .then(data => data.error === 0 && this.props.history.push('/main'));
+      .then(data => {
+        if (data.error === 0) {
+          this.props.history.push('/main') 
+        }
+        if (data.error === 1000) {
+          this.setState({ answear: data.message }) 
+        }
+      });
   }
 
   login = () => {
@@ -41,7 +51,14 @@ export default class Login extends Component {
       body: JSON.stringify(this.state),
     })
       .then(res => res.json())
-      .then(data => data.error === 0 && this.props.history.push('/main'));
+      .then(data => {
+        if (data.error === 0) {
+          this.props.history.push('/main') 
+        }
+        if (data.error === 1000) {
+          this.setState({ answear: data.message }) 
+        }
+      });
   }
 
   updateFields = (text, name) => {
@@ -53,40 +70,47 @@ export default class Login extends Component {
   }
 
   render() {
-    const { name, password, passwordConf, showReg } = this.state;
+    const { name, password, passwordConf, showReg, answear } = this.state;
     return (
-      <div className="form">
-        <div>
-          {showReg ? 'registration' : 'login'}
+      <div className={styles.container}>
+        <div className={styles.name}>
+          {showReg ? 'Sing up' : 'Sing in'}
         </div>
-        <Field
-          type="text"
-          name="name"
-          value={name}
-          updateFields={this.updateFields}
-        />
-        <Field
-          type="password"
-          name="password"
-          value={password}
-          updateFields={this.updateFields}
-        />
-        {showReg
-          && <>
-            <Field
-              type="passwordConf"
-              name="password"
-              value={passwordConf}
-              updateFields={this.updateFields}
-            />
-          </>
-        }
-
-        <div onClick={() => {this.setState({showReg: !showReg})}}>
-          {showReg ? 'go to login' : 'go to sing in'}
+        <div className={styles.fields}>
+          <div className={styles.answear}>
+            {answear}
+          </div>
+          <Field
+            type="text"
+            name="name"
+            placeholder="login"
+            value={name}
+            updateFields={this.updateFields}
+          />
+          <Field
+            type="password"
+            name="password"
+            placeholder="password"
+            value={password}
+            updateFields={this.updateFields}
+          />
+          {showReg
+            && <>
+              <Field
+                type="password"
+                name="passwordConf"
+                placeholder="confirm password"
+                value={passwordConf}
+                updateFields={this.updateFields}
+              />
+            </>
+          }
         </div>
-        <div onClick={showReg ? this.reg : this.login}>
-          send
+        <div onClick={showReg ? this.reg : this.login} className={`${styles.btn} ${styles['btn-login']}`}>
+          Continue
+        </div>
+        <div onClick={() => {this.setState({showReg: !showReg})}} className={`${styles.btn} ${styles['btn-change']}`}>
+          {showReg ? 'Sing in' : 'Sing up'}
         </div>
       </div>
     );

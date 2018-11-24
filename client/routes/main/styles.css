@@ -1,0 +1,21 @@
+.btn {
+  cursor: pointer;
+  padding: 8px 0;
+  color: #fff;
+  text-align: center;
+  width: 100px;
+  border-radius: 6px;
+  font-size: 18px;
+  background: #0698e4;
+  margin: 10px auto 0;
+}
+
+.btn :hover {
+  background: #056090;
+}
+
+.name {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}

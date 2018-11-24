@@ -42,7 +42,7 @@ router.post('/login', (req, res) => {
       req.session.userId = 'IVAN_ID';
       return res.json({ error: 0 });
     }
-    res.status(401).json({ error: 1000 });
+    return res.json({ error: 1000, message: 'password or login is wrong' });
   });
 });
 
