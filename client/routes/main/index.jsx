@@ -3,9 +3,15 @@ import styles from './styles.css';
 
 export default class index extends Component {
   componentDidMount() {
-    fetch('/api/auth/check')
+    console.log('login', this.state);
+    fetch('/api/auth/check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({ token: localStorage.getItem('token') }),
+    })
       .then(res => {
-        console.log(res)
         if (res && res.status !== 200) {
           this.props.history.push('/login');
         }

@@ -12,13 +12,14 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/auth/check')
-      .then(res => res.json())
-      .then(data => {
-        if (data.error === 0) {
-          this.props.history.push('/main') 
-        }
-      });
+    console.log('this.state', this.state, this.props)
+    // fetch('/api/auth/check')
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if (data.error === 0) {
+    //       this.props.history.push('/main') 
+    //     }
+    //   });
   }
 
   reg = () => {
@@ -33,6 +34,7 @@ export default class Login extends Component {
       .then(res => res.json())
       .then(data => {
         if (data.error === 0) {
+          localStorage.setItem("token", data.token);
           this.props.history.push('/main') 
         }
         if (data.error === 1000) {
