@@ -19,6 +19,9 @@ $ git clone https://github.com/njiyto/react_authorization
 # Install dependencies
 $ npm install
 
+# Start mongodb:
+$ mongod --dbpath /Users/ser/Desktop/dev/mongodb
+
 # Build app for dev
 $ npm start
 ```

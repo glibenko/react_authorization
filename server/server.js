@@ -2,9 +2,13 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const mongoExpress = require('mongo-express/lib/middleware');
+
+const mongoExpressConfig = require('../mongo_express.config');
 
 const app = express();
 
+app.use('/mongo_express', mongoExpress(mongoExpressConfig));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
