@@ -21,6 +21,7 @@ export default class index extends Component {
   logout = () => {
     fetch('/api/auth/logout')
       .then(res => {
+        localStorage.clear();
         if (res && res.status === 401) {
           this.props.history.push('/login');
         }
@@ -30,6 +31,7 @@ export default class index extends Component {
   }
 
   render() {
+    console.log('main this.props', this.props);
     return (
       <div>
         <div className={styles.name}>hi, you are inside</div>

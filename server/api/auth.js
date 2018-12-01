@@ -1,86 +1,89 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
-
-const userData = {
-  username: '',
-  password: '',
-};
+const jwsSecret = 'dfsffJGHGJ!jjd';
 
 router.post('/reg', async (req, res) => {
-  console.log('post', req.body);
-  console.log('req.session-reg', req.session);
-
   if (!req.body.name && !req.body.password && !req.body.passwordConf) {
-    return res.json({ error: 1000, message: 'bad data' });
+    return res.send({ error: 1000, message: 'bad data' });
   }
 
   if (req.body.password !== req.body.passwordConf) {
-    return res.json({ error: 1000, message: 'passwords are not same' });
+    return res.send({ error: 1000, message: 'passwords are not same' });
   }
 
-  userData.username = req.body.name;
-  userData.password = req.body.password;
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const token = await jwt.sign({ foo: 'bar' }, jwsSecret);
 
-  const hash = await bcrypt.hash(req.body.password, 10);
-  const token = await jwt.sign({ foo: 'bar' }, 'shhhhh');
+    if (hash && token) {
+      const data = {
+        name: req.body.name,
+        hash,
+      };
 
-  if (hash && token) {
-    userData.password = hash;
-    req.session.userId = 'IVAN_ID';
-    return res.json({ error: 0, token });
+      const newUser = new User(data);
+
+      const save = await newUser.save();
+      console.log('save', save);
+      if (save) {
+        req.session.userId = save._id;
+        return res.send({ error: 0, token });
+      }
+    }
+    return res.send({ error: 1000 });
+  } catch (err) {
+    console.log('save err', err);
+    return res.send({ error: 1000 });
   }
-  return res.json({ error: 1000 });
 });
 
 router.post('/login', async (req, res) => {
-  console.log('post', req.body);
-  console.log('req.session-reg', req.session);
-
   if (!req.body.name && !req.body.password) {
-    return res.json({ error: 1000, message: 'bad data' });
+    return res.send({ error: 1000, message: 'bad data' });
   }
 
-  const checkSesion = await bcrypt.compare(req.body.password, userData.password);
-  const token = await jwt.sign({ foo: 'bar' }, 'shhhhh');
-  if (checkSesion && token) {
-    req.session.userId = 'IVAN_ID';
-    return res.json({ error: 0, token });
+  try {
+    const user = await User.findOne({ name: req.body.name });
+    const checkPassword = await bcrypt.compare(req.body.password, user.hash);
+    const token = await jwt.sign({ foo: 'bar' }, jwsSecret);
+    if (checkPassword && token) {
+      req.session.userId = user._id;
+      return res.send({ error: 0, token });
+    }
+    return res.send({ error: 1000, message: 'password or login is wrong' });
+  } catch (err) {
+    console.log('login-err', err);
+    return res.send({ error: 1000, message: 'password or login is wrong' });
   }
-  return res.json({ error: 1000, message: 'password or login is wrong' });
-});
-
-router.get('/check', (req, res) => {
-  console.log('req', req.body);
-  if (req.session && req.session.userId === 'IVAN_ID') {
-    return res.status(200).json({ error: 0 });
-  }
-  return res.status(401).json({ error: 1000 });
 });
 
 router.post('/check', async (req, res) => {
-  console.log('check-post', req.body.token);
-  if (req.body.token) {
-    try {
-      const token = await jwt.verify(req.body.token, 'shhhhh');
-      if (token && req.session && req.session.userId === 'IVAN_ID') {
-        return res.status(200).json({ error: 0 });
-      }
-      return res.status(401).json({ error: 1000 });
-    } catch (err) {
-      console.log('err', err);
-      return res.status(401).json({ error: 1000 });
+  if (!req.body.token) {
+    return res.status(401).send({ error: 1000 });
+  }
+
+  try {
+    const checkToken = await jwt.verify(req.body.token, jwsSecret);
+    const findUser = await User.findById(req.session.userId);
+    if (checkToken && findUser) {
+      return res.send({ error: 0 });
     }
+    return res.status(401).send({ error: 1000 });
+  } catch (err) {
+    console.log('check-err', err);
+    return res.status(401).send({ error: 1000 });
   }
 });
 
 router.get('/logout', (req, res) => {
-  if (req.session && req.session.userId === 'IVAN_ID') {
-    req.session.destroy();
-    return res.json({ error: 0 });
+  if (!req.body.token && !req.session.userId) {
+    return res.status(401).send({ error: 1000 });
   }
-  return res.status(401).json({ error: 1000 });
+  req.session.destroy();
+  return res.send({ error: 0 });
 });
 
 module.exports = router;
