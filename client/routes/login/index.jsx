@@ -64,6 +64,10 @@ export default class Login extends Component {
       });
   }
 
+  fb = () => {
+    window.location.href = 'http://localhost:3005/api/auth/facebook';
+  }
+
   updateFields = (text, name) => {
     const updateData = {};
 
@@ -114,6 +118,9 @@ export default class Login extends Component {
         </div>
         <div onClick={() => {this.setState({showReg: !showReg})}} className={`${styles.btn} ${styles['btn-change']}`}>
           {showReg ? 'Sing in' : 'Sing up'}
+        </div>
+        <div onClick={this.fb} className={`${styles.btn} ${styles['btn-change']}`}>
+          FB
         </div>
       </div>
     );

@@ -8,7 +8,14 @@ const UserSchema = new mongoose.Schema({
   },
   hash: {
     type: String,
-    required: true,
+    trim: true,
+  },
+  facebookId: {
+    type: String,
+    trim: true,
+  },
+  facebookToken: {
+    type: String,
     trim: true,
   },
 });
