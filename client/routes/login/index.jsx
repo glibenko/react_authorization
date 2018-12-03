@@ -11,17 +11,6 @@ export default class Login extends Component {
     answear: '',
   }
 
-  componentDidMount() {
-    console.log('this.state', this.state, this.props)
-    // fetch('/api/auth/check')
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     if (data.error === 0) {
-    //       this.props.history.push('/main') 
-    //     }
-    //   });
-  }
-
   reg = () => {
     console.log('login', this.state);
     fetch('/api/auth/reg', {

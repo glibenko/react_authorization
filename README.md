@@ -9,6 +9,7 @@ This App using:
 * Webpack
 * ESlint
 * Babel
+* Mongodb
 
 
 ### Fast start
@@ -29,12 +30,13 @@ $ npm start
 ### Description
 * [npm start] - concurrently run two commands below
 * [npm run build:dev] - webpack --progress
-* [npm run start:dev] -  nodemon --watch ./server/server.js --watch ./server/ on 4000 port
+* [npm run start:dev] -  nodemon --watch ./server/server.js --watch ./server/ on 3005 port
+* else you can open mongodb admin panel - localhost:3005/mongo_express
 
 ### Folder Structure
 * [client] - there are all files which relate to front
 * [public] - there is a ready app
-* [server] - there are all files which relate to server
+* [server] - there are all files which relate to server and mongodb
 * [root files] - there are all settings files
 
 ### Contribution

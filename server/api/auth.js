@@ -8,14 +8,11 @@ const User = require('../models/user');
 const SETTINGS = require('../consts');
 
 passport.serializeUser((user, done) => {
-  // console.log('serializeUser', user);
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
-  // console.log('deserializeUser', id);
   User.findById(id, (err, user) => {
-    // console.log('deserializeUser-2', id, user);
     done(err, user);
   });
 });
@@ -26,10 +23,6 @@ passport.use(new FacebookStrategy({
   clientSecret: SETTINGS.CLIENT_SECRET,
   callbackURL: SETTINGS.REDIRECT_URL,
 }, async (accessToken, refreshToken, profile, cb) => {
-  console.log('facebook', accessToken, refreshToken, profile, cb);
-//   User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-//     return cb(err, user);
-//   });
   try {
     let user = await User.findOne({ facebookId: profile.id });
     console.log('user', user);
@@ -106,29 +99,27 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/check', async (req, res) => {
-  console.log('check-req', req.session.passport.user, req.session);
-  if (req.session.passport.user) {
+  if (req.session.passport && req.session.passport.user) {
     const findUser = await User.findById(req.session.userId);
     if (findUser) {
       return res.send({ error: 0 });
     }
   }
-  return res.send({ error: 0 });
-  // if (!req.body.token) {
-  //   return res.status(401).send({ error: 1000 });
-  // }
+  if (!req.body.token) {
+    return res.status(401).send({ error: 1000 });
+  }
 
-  // try {
-  //   const checkToken = await jwt.verify(req.body.token, SETTINGS.JWT_SECRET);
-  //   const findUser = await User.findById(req.session.userId);
-  //   if (checkToken && findUser) {
-  //     return res.send({ error: 0 });
-  //   }
-  //   return res.status(401).send({ error: 1000 });
-  // } catch (err) {
-  //   console.log('check-err', err);
-  //   return res.status(401).send({ error: 1000 });
-  // }
+  try {
+    const checkToken = await jwt.verify(req.body.token, SETTINGS.JWT_SECRET);
+    const findUser = await User.findById(req.session.userId);
+    if (checkToken && findUser) {
+      return res.send({ error: 0 });
+    }
+    return res.status(401).send({ error: 1000 });
+  } catch (err) {
+    console.log('check-err', err);
+    return res.status(401).send({ error: 1000 });
+  }
 });
 
 router.get('/logout', (req, res) => {
@@ -139,19 +130,10 @@ router.get('/logout', (req, res) => {
   return res.send({ error: 0 });
 });
 
-router.get('/facebook', passport.authenticate('facebook'), () => {
-  console.log('object')
-});
+router.get('/facebook', passport.authenticate('facebook'));
 
 router.get('/facebook/callback',
   passport.authenticate('facebook',
     { successRedirect: '/main', failureRedirect: '/login' }));
-
-// router.get('/facebook/callback', passport.authenticate('facebook'), (req, res, next) => {
-//   console.log('facebook-2', req, res);
-//   // // Successful authentication, redirect home.
-//   // res.redirect('/');
-//   // next();
-// });
 
 module.exports = router;
