@@ -1,8 +1,21 @@
+// @flow
 import React, { Component } from 'react';
 import Field from '../../ui/Field';
 import styles from './styles.css';
 
-export default class Login extends Component {
+type Props = {
+  history: Object;
+};
+
+type State = {
+  name: string,
+  password: string,
+  passwordConf: string,
+  showReg: boolean,
+  answear: string,
+};
+
+export default class Login extends Component<Props, State> {
   state = {
     name: '',
     password: '',
@@ -12,19 +25,20 @@ export default class Login extends Component {
   }
 
   reg = () => {
+    const { history } = this.props;
     console.log('login', this.state);
     fetch('/api/auth/reg', {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
+        'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify(this.state),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res: Object) => res.json())
+      .then((data: Object) => {
         if (data.error === 0) {
-          localStorage.setItem("token", data.token);
-          this.props.history.push('/main') 
+          localStorage.setItem('token', data.token);
+          history.push('/main');
         }
         if (data.error === 1000) {
           this.setState({ answear: data.message }) 
@@ -33,6 +47,7 @@ export default class Login extends Component {
   }
 
   login = () => {
+    const { history } = this.props;
     console.log('login', this.state);
     fetch('/api/auth/login', {
       method: 'POST',
@@ -42,10 +57,10 @@ export default class Login extends Component {
       body: JSON.stringify(this.state),
     })
       .then(res => res.json())
-      .then(data => {
+      .then((data) => {
         if (data.error === 0) {
-          localStorage.setItem("token", data.token);
-          this.props.history.push('/main');
+          localStorage.setItem('token', data.token);
+          history.push('/main');
         }
         if (data.error === 1000) {
           this.setState({ answear: data.message }) 
@@ -57,7 +72,7 @@ export default class Login extends Component {
     window.location.href = 'http://localhost:3005/api/auth/facebook';
   }
 
-  updateFields = (text, name) => {
+  updateFields = (text: string, name: string) => {
     const updateData = {};
 
     updateData[name] = text;
@@ -66,7 +81,14 @@ export default class Login extends Component {
   }
 
   render() {
-    const { name, password, passwordConf, showReg, answear } = this.state;
+    const {
+      name,
+      password,
+      passwordConf,
+      showReg,
+      answear,
+    } = this.state;
+
     return (
       <div className={styles.container}>
         <div className={styles.name}>

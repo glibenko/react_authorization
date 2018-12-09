@@ -1,9 +1,14 @@
+// @flow
 import React, { Component } from 'react';
 import styles from './styles.css';
 
-export default class index extends Component {
+type Props = {
+  history: Object;
+};
+
+export default class Main extends Component<Props> {
   componentDidMount() {
-    console.log('login', this.state);
+    const { history } = this.props;
     fetch('/api/auth/check', {
       method: 'POST',
       headers: {
@@ -11,31 +16,39 @@ export default class index extends Component {
       },
       body: JSON.stringify({ token: localStorage.getItem('token') }),
     })
-      .then(res => {
+      .then((res) => {
         if (res && res.status !== 200) {
-          this.props.history.push('/login');
+          history.push('/login');
         }
       });
   }
 
   logout = () => {
+    const { history } = this.props;
     fetch('/api/auth/logout')
-      .then(res => {
+      .then((res) => {
         localStorage.clear();
         if (res && res.status === 401) {
-          this.props.history.push('/login');
+          history.push('/login');
         }
         return res.json();
       })
-      .then(() => this.props.history.push('/login'));
+      .then(() => history.push('/login'));
   }
 
   render() {
-    console.log('main this.props', this.props);
     return (
       <div>
         <div className={styles.name}>hi, you are inside</div>
-        <div onClick={this.logout} className={styles.btn}> logout</div>
+        <div
+          onClick={this.logout}
+          onKeyUp={this.logout}
+          className={styles.btn}
+          role="button"
+          tabIndex={0}
+        >
+          logout
+        </div>
       </div>
     );
   }

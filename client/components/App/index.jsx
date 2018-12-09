@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -8,16 +9,14 @@ import {
 import Login from '../../routes/login';
 import Main from '../../routes/main';
 
-export default class App extends Component {
-  render() {
-    return (
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route path="/main" component={Main} />
-          <Redirect exact path="" to="/main" />
-        </Switch>
-      </Router>
-    );
-  }
+export default function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/login" component={Login} />
+        <Route path="/main" component={Main} />
+        <Redirect exact path="" to="/main" />
+      </Switch>
+    </Router>
+  );
 }
