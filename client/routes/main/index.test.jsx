@@ -1,24 +1,20 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import Main from './main';
+// import renderer from 'react-test-renderer';
+import { shallow, mount, render, configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Main from './index';
 
 
-test('Link changes the class when hovered', () => {
-  const component = renderer.create(
-    <Main />,
-  );
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
 
-  // manually trigger the callback
-  tree.props.onMouseEnter();
-  // re-rendering
-  tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+configure({ adapter: new Adapter() });
 
-  // manually trigger the callback
-  tree.props.onMouseLeave();
-  // re-rendering
-  tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+
+
+describe('<Foo />', () => {
+  it('Link changes the class when hovered', () => {
+    const wrapper = mount(<Main val="2" />);
+    console.log(wrapper.debug());
+    expect(wrapper.props().val).toBeTruthy();
+    expect(wrapper.props().val).toEqual('2');
+  });
 });
